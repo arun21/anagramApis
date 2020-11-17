@@ -8,6 +8,7 @@ import jwt
 import json
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 class User(db.Model):
           id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -22,8 +23,6 @@ class Anagram(db.Model):
           secondData = db.Column(db.String(50), nullable=False)
           count = db.Column(db.Integer)
           date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-bcrypt = Bcrypt(app)
 
 # DEFAULT
 @app.route('/')
@@ -72,11 +71,9 @@ def verify():
 @app.route('/login', methods=['POST'])
 def login():
           data = request.get_json()
-          print("TESTING DATA", data)
           encoded_jwt = encode_auth_token(data['email'])
           user = User.query.filter_by(email=data['email']).first() 
           if not user:
-                    print("USERRRRR", user)
                     return jsonify({'text':"Email not registered yet.", 'value':False})
           elif not bcrypt.check_password_hash(user.password, data['password']):
                     return jsonify({'text':"Invalid password", 'value':False})
@@ -107,11 +104,10 @@ def checkAnagrams():
 @app.route('/counts', methods=['GET'])
 def countPopular():
          anagrams = []
-         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(10).distinct().all()
+         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(11).distinct().all()
          for anagram in total_anagrams:
                    if (anagram.firstData, anagram.secondData) not in anagrams and (anagram.secondData, anagram.firstData) not in anagrams:
                              anagrams.append((anagram.firstData, anagram.secondData))
-         print(anagrams)
          return json.dumps(anagrams)
 
 def encode_auth_token(email):
