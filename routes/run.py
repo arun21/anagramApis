@@ -93,7 +93,8 @@ def login():
 def checkAnagrams():
           res = {'value':"NOT ANAGRAMS", 'code':False}
           data = request.get_json()
-          users = Anagram.query.filter_by(user_email=data['email']).all()
+          #users = Anagram.query.filter_by(user_email=data['email']).all()
+          users = Anagram.query.all()
           user = matchText(users, data)
           if(sorted(data['firstData'].lower()) == sorted(data['secondData'].lower())):
                     if not user:
@@ -116,7 +117,7 @@ def matchText(users, data):
 @cross_origin()
 def countPopular():
          anagrams = []
-         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(11).distinct().all()
+         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(11).all()
          for anagram in total_anagrams:
                    if (anagram.firstData, anagram.secondData) not in anagrams and (anagram.secondData, anagram.firstData) not in anagrams:
                              anagrams.append((anagram.firstData, anagram.secondData))
