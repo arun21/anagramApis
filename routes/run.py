@@ -98,7 +98,7 @@ def checkAnagrams():
           if user:
                     user.count = user.count + 1
                     db.session.commit()
-          if(sorted(data['firstData']) == sorted(data['secondData'])):
+          if(sorted(data['firstData'].lower()) == sorted(data['secondData'].lower())):
                     if not user:
                               anagram = Anagram(user_email=data['email'], firstData=data['firstData'], secondData=data['secondData'], count=1)
                               db.session.add(anagram)
