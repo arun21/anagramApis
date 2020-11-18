@@ -117,7 +117,7 @@ def matchText(users, data):
 @cross_origin()
 def countPopular():
          anagrams = []
-         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(11).all()
+         total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(10).all()
          for anagram in total_anagrams:
                    if (anagram.firstData, anagram.secondData) not in anagrams and (anagram.secondData, anagram.firstData) not in anagrams:
                              anagrams.append((anagram.firstData, anagram.secondData))
