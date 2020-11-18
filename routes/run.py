@@ -1,4 +1,4 @@
-from server import app
+from application import application
 from flask import Flask, request, abort, Response, jsonify
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import jwt
 import json
 
+app = application
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
