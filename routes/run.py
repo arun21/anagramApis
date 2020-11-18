@@ -95,16 +95,23 @@ def checkAnagrams():
           data = request.get_json()
           users = Anagram.query.filter_by(user_email=data['email']).all()
           user = matchText(users, data)
-          if user:
-                    user.count = user.count + 1
-                    db.session.commit()
           if(sorted(data['firstData'].lower()) == sorted(data['secondData'].lower())):
                     if not user:
                               anagram = Anagram(user_email=data['email'], firstData=data['firstData'], secondData=data['secondData'], count=1)
                               db.session.add(anagram)
                               db.session.commit()
+                    else:
+                              user.count = user.count + 1
+                              db.session.commit()
                     res = {'value':"ANAGRAMS", 'code':True}
           return jsonify(res)
+
+def matchText(users, data):
+          for user in users:
+                    print(user)
+                    if (data['firstData'] == user.firstData or data['firstData'] == user.secondData) and (data['secondData'] == user.firstData or data['secondData'] == user.secondData):
+                              print("CASE", True)
+                              return user
 
 # ROUTE: get top counts
 @app.route('/counts', methods=['GET'])
@@ -134,10 +141,4 @@ def encode_auth_token(email):
                     )
           except Exception as e:
                     return e
-
-          
-def matchText(users, data):
-          for user in users:
-                    if (user.firstData == data['firstData'] or user.firstData == data['secondData']) and (user.secondData == data['firstData'] or user.secondData == data['secondData']):
-                              return user
            
