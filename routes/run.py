@@ -1,6 +1,6 @@
 from routes import app
 from flask import Flask, request, abort, Response, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
@@ -26,11 +26,13 @@ class Anagram(db.Model):
 
 # DEFAULT
 @app.route('/')
+@cross_origin()
 def default():
           return "Flask Server is running"
 
 # Register
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
           data = request.get_json()
           pw_hash = bcrypt.generate_password_hash(data['password'])
@@ -44,6 +46,7 @@ def register():
 
 # CheckUser
 @app.route('/checkUser', methods=['GET'])
+@cross_origin()
 def checkUser():
           data = request.args.get("email")
           user = User.query.filter_by(email=data).first() 
@@ -54,6 +57,7 @@ def checkUser():
 
 # verify Token
 @app.route('/verify')
+@cross_origin()
 def verify():
           encoded_jwt = request.args.get("token").encode()
           payload = jwt.decode(encoded_jwt, app.config.get('SECRET_KEY'), algorithms=['HS256'])
@@ -69,6 +73,7 @@ def verify():
 
 # Login
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
           data = request.get_json()
           encoded_jwt = encode_auth_token(data['email'])
@@ -84,6 +89,7 @@ def login():
 
 # ROUTE: check-anagrams
 @app.route('/check-anagram', methods=['POST'])
+@cross_origin()
 def checkAnagrams():
           res = {'value':"NOT ANAGRAMS", 'code':False}
           data = request.get_json()
@@ -102,6 +108,7 @@ def checkAnagrams():
 
 # ROUTE: get top counts
 @app.route('/counts', methods=['GET'])
+@cross_origin()
 def countPopular():
          anagrams = []
          total_anagrams = Anagram.query.order_by(Anagram.count.desc()).limit(11).distinct().all()
