@@ -108,9 +108,7 @@ def checkAnagrams():
 
 def matchText(users, data):
           for user in users:
-                    print(user)
                     if (data['firstData'] == user.firstData or data['firstData'] == user.secondData) and (data['secondData'] == user.firstData or data['secondData'] == user.secondData):
-                              print("CASE", True)
                               return user
 
 # ROUTE: get top counts
