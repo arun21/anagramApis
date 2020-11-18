@@ -1,4 +1,4 @@
-from server import app
+from routes import app
 from flask import Flask, request, abort, Response, jsonify
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
